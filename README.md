@@ -1,1 +1,1 @@
-# Algoritmid ja andmestruktuurid (2019)
+# Algoritmid ja andmestruktuurid (ICD0001)

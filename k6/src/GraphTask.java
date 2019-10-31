@@ -17,7 +17,13 @@ public class GraphTask {
      */
     public void run() {
         Graph g = new Graph("G");
-        g.createRandomSimpleGraph(6, 9);
+        Vertex C = g.createVertex("C");
+        Vertex B = g.createVertex("B");
+        Vertex A = g.createVertex("A");
+
+        g.createArc("aA-B", A, B);
+        g.createArc("aB-C", B, C);
+
         System.out.println(g);
         System.out.println(g.createTransitiveClosure());
     }
@@ -231,17 +237,18 @@ public class GraphTask {
         /**
          * Create a transitive closure of a graph.
          * Transitive closure is a result of adding to source graph all arcs (u, v), for which exists a path
-         * from vertex u to vertex v in the source graph (but without new self-loops).
+         * from vertex u to vertex v in the source graph (but without new loops).
          *
          * @return graph+, transitive closure
          */
         public Graph createTransitiveClosure() {
+            if (first == null) return new Graph(id + "+");
             int[][] matrix = createAdjMatrix();
             int V = matrix.length;
             for (int k = 0; k < V; k++) {
                 for (int r = 0; r < V; r++) {
                     for (int c = 0; c < V; c++) {
-                        if (r != c && matrix[r][k] != 0 && matrix[k][c] != 0) matrix[r][c] = 1;
+                        if (r != c && matrix[r][c] == 0 && matrix[r][k] != 0 && matrix[k][c] != 0) matrix[r][c] = 1;
                     }
                 }
             }

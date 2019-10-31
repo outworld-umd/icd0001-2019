@@ -1,2 +1,1 @@
-# Algoritmid ja andmestruktuurid (2019)
-Lorem ipsum
+## Algoritmid ja andmestruktuurid (2019)

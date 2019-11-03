@@ -66,21 +66,25 @@ public class GraphTaskTest {
     public void testSmallDirectedGraph() {
         GraphTask.Graph g = new GraphTask().new Graph("G");
 
+        GraphTask.Vertex e = g.createVertex("E");
         GraphTask.Vertex d = g.createVertex("D");
         GraphTask.Vertex c = g.createVertex("C");
         GraphTask.Vertex b = g.createVertex("B");
         GraphTask.Vertex a = g.createVertex("A");
 
         g.createArc("aA-B", a, b);
-        g.createArc("aB-C", b, c);
-        g.createArc("aB-D", b, d);
-        g.createArc("aC-A", c, a);
+        g.createArc("aA-D", a, d);
+        g.createArc("aA-C", a, c);
+        g.createArc("aD-C", d, c);
+        g.createArc("aC-E", c, e);
+        g.createArc("aE-C", e, c);
 
         String expectedSmallDirectedGraphString = "G+\n" +
-                "A --> aA_B (A->B) aA_C (A->C) aA_D (A->D)\n" +
-                "B --> aB_A (B->A) aB_C (B->C) aB_D (B->D)\n" +
-                "C --> aC_A (C->A) aC_B (C->B) aC_D (C->D)\n" +
-                "D -->";
+                "A --> aA_B (A->B) aA_C (A->C) aA_D (A->D) aA_E (A->E)\n" +
+                "B -->\n" +
+                "C --> aC_E (C->E)\n" +
+                "D --> aD_C (D->C) aD_E (D->E)\n" +
+                "E --> aE_C (E->C)";
         String actualSmallDirectedGraphString = g.createTransitiveClosure().toString().strip();
 
         assertEquals(expectedSmallDirectedGraphString, actualSmallDirectedGraphString);

@@ -17,12 +17,25 @@ public class GraphTask {
      */
     public void run() {
         Graph g = new Graph("G");
-        Vertex C = g.createVertex("C");
-        Vertex B = g.createVertex("B");
-        Vertex A = g.createVertex("A");
 
-        g.createArc("aA-B", A, B);
-        g.createArc("aB-C", B, C);
+        GraphTask.Vertex e = g.createVertex("E");
+        GraphTask.Vertex d = g.createVertex("D");
+        GraphTask.Vertex c = g.createVertex("C");
+        GraphTask.Vertex b = g.createVertex("B");
+        GraphTask.Vertex a = g.createVertex("A");
+
+        g.createArc("aA-B", a, b);
+        g.createArc("aA-B", a, b);
+        g.createArc("aA-E", a, e);
+        g.createArc("aB-C", b, c);
+        g.createArc("aB-C", b, c);
+        g.createArc("aC-D", c, d);
+        g.createArc("aC-D", c, d);
+        g.createArc("aC-D", c, d);
+        g.createArc("aC-E", c, e);
+        g.createArc("aD-D", d, d);
+        g.createArc("aE-D", e, d);
+        g.createArc("aE-E", e, e);
 
         System.out.println(g);
         System.out.println(g.createTransitiveClosure());
@@ -101,7 +114,7 @@ public class GraphTask {
 
         @Override
         public String toString() {
-            String nl = System.getProperty("line.separator");
+            String nl = "\n";
             StringBuilder sb = new StringBuilder(nl);
             sb.append(id);
             sb.append(nl);

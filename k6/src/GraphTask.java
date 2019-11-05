@@ -16,29 +16,7 @@ public class GraphTask {
      * Actual main method to run examples and everything.
      */
     public void run() {
-        Graph g = new Graph("G");
-
-        GraphTask.Vertex e = g.createVertex("E");
-        GraphTask.Vertex d = g.createVertex("D");
-        GraphTask.Vertex c = g.createVertex("C");
-        GraphTask.Vertex b = g.createVertex("B");
-        GraphTask.Vertex a = g.createVertex("A");
-
-        g.createArc("aA-B", a, b);
-        g.createArc("aA-B", a, b);
-        g.createArc("aA-E", a, e);
-        g.createArc("aB-C", b, c);
-        g.createArc("aB-C", b, c);
-        g.createArc("aC-D", c, d);
-        g.createArc("aC-D", c, d);
-        g.createArc("aC-D", c, d);
-        g.createArc("aC-E", c, e);
-        g.createArc("aD-D", d, d);
-        g.createArc("aE-D", e, d);
-        g.createArc("aE-E", e, e);
-
-        System.out.println(g);
-        System.out.println(g.createTransitiveClosure());
+        // TODO!! Your tests here!
     }
 
     /**
@@ -155,28 +133,6 @@ public class GraphTask {
         }
 
         /**
-         * Create a connected undirected random tree with n vertices.
-         * Each new vertex is connected to some random existing vertex.
-         *
-         * @param n number of vertices added to this graph
-         */
-        public void createRandomTree(int n) {
-            if (n <= 0)
-                return;
-            Vertex[] varray = new Vertex[n];
-            for (int i = 0; i < n; i++) {
-                varray[i] = createVertex("v" + (n - i));
-                if (i > 0) {
-                    int vnr = (int) (Math.random() * i);
-                    createArc("a" + varray[vnr].toString() + "_"
-                            + varray[i].toString(), varray[vnr], varray[i]);
-                    createArc("a" + varray[i].toString() + "_"
-                            + varray[vnr].toString(), varray[i], varray[vnr]);
-                }
-            }
-        }
-
-        /**
          * Create an adjacency matrix of this graph.
          * Side effect: corrupts info fields in the graph
          *
@@ -205,49 +161,6 @@ public class GraphTask {
         }
 
         /**
-         * Create a connected simple (undirected, no loops, no multiple
-         * arcs) random graph with n vertices and m edges.
-         *
-         * @param n number of vertices
-         * @param m number of edges
-         */
-        public void createRandomSimpleGraph(int n, int m) {
-            if (n <= 0)
-                return;
-            if (n > 2500)
-                throw new IllegalArgumentException("Too many vertices: " + n);
-            if (m < n - 1 || m > n * (n - 1) / 2)
-                throw new IllegalArgumentException
-                        ("Impossible number of edges: " + m);
-            first = null;
-            createRandomTree(n);       // n-1 edges created here
-            Vertex[] vert = new Vertex[n];
-            Vertex v = first;
-            int c = 0;
-            while (v != null) {
-                vert[c++] = v;
-                v = v.next;
-            }
-            int[][] connected = createAdjMatrix();
-            int edgeCount = m - n + 1;  // remaining edges
-            while (edgeCount > 0) {
-                int i = (int) (Math.random() * n);  // random source
-                int j = (int) (Math.random() * n);  // random target
-                if (i == j)
-                    continue;  // no loops
-                if (connected[i][j] != 0 || connected[j][i] != 0)
-                    continue;  // no multiple edges
-                Vertex vi = vert[i];
-                Vertex vj = vert[j];
-                createArc("a" + vi.toString() + "_" + vj.toString(), vi, vj);
-                connected[i][j] = 1;
-                createArc("a" + vj.toString() + "_" + vi.toString(), vj, vi);
-                connected[j][i] = 1;
-                edgeCount--;  // a new edge happily created
-            }
-        }
-
-        /**
          * Create a transitive closure of a graph.
          * Transitive closure is a result of adding to source graph all arcs (u, v), for which exists a path
          * from vertex u to vertex v in the source graph (but without new loops).
@@ -258,27 +171,27 @@ public class GraphTask {
             if (first == null) return new Graph(id + "+");
             int[][] matrix = createAdjMatrix();
             int V = matrix.length;
-            for (int k = 0; k < V; k++) {
-                for (int r = 0; r < V; r++) {
-                    for (int c = 0; c < V; c++) {
-                        if (r != c && matrix[r][c] == 0 && matrix[r][k] != 0 && matrix[k][c] != 0) matrix[r][c] = 1;
+            for (int w = 0; w < V; w++) {
+                for (int u = 0; u < V; u++) {
+                    for (int v = 0; v < V; v++) {
+                        if (u != v && matrix[u][v] == 0 && matrix[u][w] != 0 && matrix[w][v] != 0) matrix[u][v] = 1;
                     }
                 }
             }
             Vertex[] vertices = new Vertex[V];
-            Vertex v = first;
+            Vertex vertex = first;
             int i = 0;
-            vertices[i] = new Vertex(v.id);
-            while (v.next != null) {
-                vertices[++i] = new Vertex(v.next.id);
+            vertices[i] = new Vertex(vertex.id);
+            while (vertex.next != null) {
+                vertices[++i] = new Vertex(vertex.next.id);
                 vertices[--i].next = vertices[++i];
-                v = v.next;
+                vertex = vertex.next;
             }
-            for (int r = 0; r < V; r++) {
-                for (int c = V - 1; c >= 0; c--) {
-                    for (int times = 0; times < matrix[r][c]; times++) {
-                        String arcId = "a" + vertices[r].toString() + "_" + vertices[c].toString();
-                        createArc(arcId, vertices[r], vertices[c]);
+            for (int u = 0; u < V; u++) {
+                for (int v = V - 1; v >= 0; v--) {
+                    for (int times = 0; times < matrix[u][v]; times++) {
+                        String arcId = "a" + vertices[u].toString() + "_" + vertices[v].toString();
+                        createArc(arcId, vertices[u], vertices[v]);
                     }
                 }
             }

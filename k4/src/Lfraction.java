@@ -8,7 +8,7 @@ public class Lfraction implements Comparable<Lfraction>, Cloneable {
      * Main method. Different tests.
      */
     public static void main(String[] param) {
-        // TODO!!! Your debugging tests here
+        System.out.println(valueOf("2/x"));
     }
 
     private long numerator;
@@ -21,7 +21,7 @@ public class Lfraction implements Comparable<Lfraction>, Cloneable {
      * @param b denominator > 0
      */
     public Lfraction(long a, long b) {
-        if (b <= 0) throw new ArithmeticException();
+        if (b <= 0) throw new ArithmeticException("Denominator cannot be 0!");
         long g = gcd(a, b);
         this.numerator = a / g;
         this.denominator = b / g;
@@ -225,11 +225,11 @@ public class Lfraction implements Comparable<Lfraction>, Cloneable {
      * @return fraction represented by s
      */
     public static Lfraction valueOf(String s) {
-        if (!s.matches(".+/.+"))
-            throw new IllegalArgumentException("Incorrect format. Excpected: (-)numerator/denominator, got: " + s);
+        if (!s.matches("^-?\\d+/-?\\d+$"))
+            throw new IllegalArgumentException("Incorrect format. Excpected: numerator/denominator, got: " + s);
         String[] strings = s.split("/");
-        if (!strings[0].matches("-?\\d+")) throw new IllegalArgumentException("Wrong numerator in fraction " + s);
-        if (!strings[1].matches("\\d+")) throw new IllegalArgumentException("Wrong denominator in fraction " + s);
-        return new Lfraction(Long.parseLong(strings[0]), Long.parseLong(strings[1]));
+        long num = Long.parseLong(strings[0]);
+        long den = Long.parseLong(strings[1]);
+        return new Lfraction(den > 0 ? num : -num, den > 0 ? den : -den);
     }
 }

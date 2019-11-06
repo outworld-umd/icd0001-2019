@@ -225,11 +225,9 @@ public class Lfraction implements Comparable<Lfraction>, Cloneable {
      * @return fraction represented by s
      */
     public static Lfraction valueOf(String s) {
-        if (!s.matches(".+/.+"))
+        if (!s.matches("^-?\\d+/-?\\d+$"))
             throw new IllegalArgumentException("Incorrect format. Excpected: numerator/denominator, got: " + s);
         String[] strings = s.split("/");
-        if (!strings[0].matches("-?\\d+")) throw new IllegalArgumentException("Wrong numerator in fraction " + s);
-        if (!strings[1].matches("-?\\d+")) throw new IllegalArgumentException("Wrong denominator in fraction " + s);
         long num = Long.parseLong(strings[0]);
         long den = Long.parseLong(strings[1]);
         return new Lfraction(den > 0 ? num : -num, den > 0 ? den : -den);

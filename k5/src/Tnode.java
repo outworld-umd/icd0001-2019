@@ -33,14 +33,26 @@ public class Tnode {
     public static Tnode buildFromRPN(String pol) {
         Stack<Tnode> stack = new Stack<>();
         for (String node : pol.split("\\s+")) {
-            if (!node.matches("-?\\d+") && !node.matches("[+\\-*/]"))
+            if (!node.matches("-?\\d+") && !node.matches("[+\\-*/]|SWAP|ROT"))
                 throw new IllegalArgumentException(String.format("Expression %s contains illegal symbol!", pol));
-            if (node.matches("[+\\-*/]")) {
+            if (node.matches("[+\\-*/]|SWAP|ROT")) {
                 try {
-                    Tnode nextSibling = stack.pop();
-                    Tnode firstChild = stack.pop();
-                    firstChild.nextSibling = nextSibling;
-                    stack.push(new Tnode(node, firstChild));
+                    if (node.matches("SWAP")) {
+                        Tnode a = stack.pop();
+                        Tnode b = stack.pop();
+                        stack.push(a);
+                        stack.push(b);
+                    } else if (node.matches("ROT")) {
+                        Tnode a = stack.pop();
+                        Tnode b = stack.pop();
+                        Tnode c = stack.pop();
+                        Arrays.asList(b, a, c).forEach(stack::push);
+                    } else {
+                        Tnode nextSibling = stack.pop();
+                        Tnode firstChild = stack.pop();
+                        firstChild.nextSibling = nextSibling;
+                        stack.push(new Tnode(node, firstChild));
+                    }
                 } catch (RuntimeException e) {
                     throw new RuntimeException(String.format("Expression %s contains too few numbers!", pol));
                 }
@@ -54,9 +66,15 @@ public class Tnode {
     }
 
     public static void main(String[] param) {
-        String rpn = "5 1 - 7 * 6 3 / +";
-        System.out.println("RPN: " + rpn);
-        Tnode res = buildFromRPN(rpn);
-        System.out.println("Tree: " + res);
+        String[] testStrings = new String[] {
+                "2 5 SWAP -",         // -(5,2)
+                "2 5 9 ROT - +",      // +(5,-(9,2))
+                "2 5 9 ROT + SWAP -"  // -(+(9,2),5)
+        };
+        Arrays.asList(testStrings).forEach(rpn -> {
+            System.out.println("RPN: " + rpn);
+            Tnode res = buildFromRPN(rpn);
+            System.out.println("Tree: " + res);
+        });
     }
 }

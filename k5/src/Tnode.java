@@ -33,8 +33,8 @@ public class Tnode {
     public static Tnode buildFromRPN(String pol) {
         Stack<Tnode> stack = new Stack<>();
         for (String node : pol.split("\\s+")) {
-            if (!node.matches("-?\\d+") && !node.matches("[+\\-*/]|SWAP|ROT"))
-                throw new IllegalArgumentException(String.format("Expression %s contains illegal symbol!", pol));
+            if (!node.matches("-?\\d+|[+\\-*/]|SWAP|ROT"))
+                throw new IllegalArgumentException(String.format("Expression %s contains illegal symbol %s!", pol, node));
             if (node.matches("[+\\-*/]|SWAP|ROT")) {
                 try {
                     if (node.matches("SWAP")) {

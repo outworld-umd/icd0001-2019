@@ -2,20 +2,22 @@ import java.util.*;
 
 public class Puzzle {
 
-    private HashMap<Character, Integer> solution = new HashMap<>();
+    private static final String ILLEGAL_ARGS_MSG = "Puzzle solver takes exactly 3 arguments!";
+    private static final String TOO_MANY_CHARS_MSG = "Given string array contains more chars than there are digits!";
+    private static final String RESULT_MSG = "Puzzle %s + %s = %s has %s %s.\n%s\n";
+
     private ArrayList<String> solutions = new ArrayList<>();
+    private HashMap<Character, Integer> solution = new HashMap<>();
     private String add1;
     private String add2;
     private String sum;
 
     public static void main(String[] input) {
-        ArrayList<? extends String> result = new Puzzle().solve(input);
-        System.out.println(result);
-        System.out.println(result.size());
+        System.out.println(new Puzzle().solve(input));
     }
 
-    private ArrayList<String> solve(String[] input) {
-        if (input.length != 3) throw new RuntimeException("Puzzle solver only takes an array with size 3.");
+    private String solve(String[] input) {
+        if (input.length != 3) throw new RuntimeException(ILLEGAL_ARGS_MSG);
         Set<String> letters = new LinkedHashSet<>();
         add1 = input[0];
         add2 = input[1];
@@ -25,27 +27,30 @@ public class Puzzle {
             if (i < add2.length()) letters.add(Character.toString(add2.charAt(i)));
             if (i < sum.length()) letters.add(Character.toString(sum.charAt(i)));
         }
-        if (letters.size() > 10) return solutions;
+        if (letters.size() > 10) throw new RuntimeException(TOO_MANY_CHARS_MSG);
         solveRecursively(String.join("", letters));
-        return solutions;
+        return String.format(RESULT_MSG, add1, add2, sum,
+                solutions.size() > 0 ? solutions.size() : "no",
+                solutions.size() == 1 ? "solution" : "solutions", solutions);
     }
 
-    private boolean solveRecursively(String availableLetters) {
+    private void solveRecursively(String availableLetters) {
         if (availableLetters.isEmpty()) {
-            if (!(solution.get(add1.charAt(0)) == 0 || solution.get(add2.charAt(0)) == 0 || solution.get(sum.charAt(0)) == 0)
-                    && valueOf(add1) + valueOf(add2) == valueOf(sum)) {
-                solutions.add(solution.toString());
-            }
-            return false;
+            if (checkSolution()) solutions.add(solution.toString());
+            return;
         }
         for (int digit = 0; digit < 10; digit++) {
             if (!solution.containsValue(digit)) {
                 solution.put(availableLetters.charAt(0), digit);
-                if (solveRecursively(availableLetters.substring(1))) return true;
+                solveRecursively(availableLetters.substring(1));
                 solution.remove(availableLetters.charAt(0));
             }
         }
-        return false;
+    }
+
+    private boolean checkSolution() {
+        return !(solution.get(add1.charAt(0)) == 0 || solution.get(add2.charAt(0)) == 0 ||
+                solution.get(sum.charAt(0)) == 0) && valueOf(add1) + valueOf(add2) == valueOf(sum);
     }
 
     private int valueOf(String w) {

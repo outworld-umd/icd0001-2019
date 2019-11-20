@@ -73,8 +73,7 @@ public class Tnode {
         };
         Arrays.asList(testStrings).forEach(rpn -> {
             System.out.println("RPN: " + rpn);
-            Tnode res = buildFromRPN(rpn);
-            System.out.println("Tree: " + res);
+            System.out.println("Tree: " + buildFromRPN(rpn));
         });
     }
 }

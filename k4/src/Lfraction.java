@@ -8,7 +8,7 @@ public class Lfraction implements Comparable<Lfraction>, Cloneable {
      * Main method. Different tests.
      */
     public static void main(String[] param) {
-        System.out.println(valueOf("2/x"));
+        System.out.println(valueOf("2/-4/6"));
     }
 
     private long numerator;
@@ -226,7 +226,7 @@ public class Lfraction implements Comparable<Lfraction>, Cloneable {
      */
     public static Lfraction valueOf(String s) {
         if (!s.matches("^-?\\d+/-?\\d+$"))
-            throw new IllegalArgumentException("Incorrect format. Excpected: numerator/denominator, got: " + s);
+            throw new IllegalArgumentException("Incorrect format. Expected: numerator/denominator, got: " + s);
         String[] strings = s.split("/");
         long num = Long.parseLong(strings[0]);
         long den = Long.parseLong(strings[1]);

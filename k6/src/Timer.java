@@ -10,8 +10,8 @@ public class Timer {
         return (System.currentTimeMillis() - start) / 1000D;
     }
 
-    public String getElapsedTimeMessage() {
-        return "Time elapsed: " + getElapsedTime() + " s";
+    public void getElapsedTimeMessage() {
+        System.out.println("Time elapsed: " + getElapsedTime() + " s");
     }
 
 }

@@ -20,7 +20,7 @@ public class GraphTask {
         graph.createRandomSimpleGraph(2000, 2000);
         Timer timer = new Timer();
         System.out.println(graph.createTransitiveClosure());
-        System.out.println(timer.getElapsedTimeMessage());
+        timer.getElapsedTimeMessage();
     }
 
     /**

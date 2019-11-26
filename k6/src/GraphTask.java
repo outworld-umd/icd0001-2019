@@ -18,9 +18,9 @@ public class GraphTask {
     public void run() {
         Graph graph = new Graph("G");
         graph.createRandomSimpleGraph(2000, 2000);
-        long start = System.currentTimeMillis();
+        Timer timer = new Timer();
         System.out.println(graph.createTransitiveClosure());
-        System.out.println("Time elapsed: " + (System.currentTimeMillis() - start) / 1000D + " s");
+        System.out.println(timer.getElapsedTimeMessage());
     }
 
     /**

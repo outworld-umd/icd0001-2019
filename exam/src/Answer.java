@@ -87,23 +87,21 @@ public class Answer {
         return root;
     }
 
-    private int maxWidth = 0;
-
-    private void countWidth(Answer a) {
-        if (a.firstChild == null) return;
-        int count = 1;
-        Answer child = a.firstChild;
-        while (child.nextSibling != null) {
+    private int countWidth(Answer a) {
+        if (a.getFirstChild() == null) return 0;
+        Answer child = a.getFirstChild();
+        int count = 0;
+        int maxWidth = 0;
+        while (child != null) {
             count++;
-            child = child.nextSibling;
-            countWidth(child);
+            maxWidth = Math.max(countWidth(child), maxWidth);
+            child = child.getNextSibling();
         }
-        maxWidth = Math.max(maxWidth, count);
+        return Math.max(maxWidth, count);
     }
 
     public int maxWidth() {
-        countWidth(this);
-        return maxWidth;
+        return countWidth(this);
     }
 
     public static void main (String[] param) {

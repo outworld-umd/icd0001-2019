@@ -52,34 +52,37 @@ public class Node {
         StringTokenizer tok = new StringTokenizer (s, "(),", true);
         while (tok.hasMoreTokens()) {
             String w = tok.nextToken().trim();
-            if (w.equals ("(")) {
-                state = 1; // from up
-            } else if (w.equals (",")) {
-                state = 2; // from left
-            } else if (w.equals (")")) {
-                state = 3; // from down
-                stk.pop();
-            } else {
-                curr = new Node (w, null, null);
-                switch (state) {
-                    case 0: {
-                        root = curr;
-                        break;
-                    }
-                    case 1: {
-                        last = stk.peek();
-                        last.setFirstChild (curr);
-                        break;
-                    }
-                    case 2: {
-                        last = stk.pop();
-                        last.setNextSibling (curr);
-                        break;
-                    }
-                    default: {
-                    }
-                } // switch
-                stk.push (curr);
+            switch (w) {
+                case "(":
+                    state = 1; // from up
+                    break;
+                case ",":
+                    state = 2; // from left
+                    break;
+                case ")":
+                    state = 3; // from down
+                    stk.pop();
+                    break;
+                default:
+                    curr = new Node(w, null, null);
+                    switch (state) {
+                        case 0: {
+                            root = curr;
+                            break;
+                        }
+                        case 1: {
+                            last = stk.peek();
+                            last.setFirstChild(curr);
+                            break;
+                        }
+                        case 2: {
+                            last = stk.pop();
+                            last.setNextSibling(curr);
+                            break;
+                        }
+                    } // switch
+                    stk.push(curr);
+                    break;
             }
         } // next w
         return root;

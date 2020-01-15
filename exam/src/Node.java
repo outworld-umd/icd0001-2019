@@ -115,8 +115,9 @@ public class Node {
 
     public static void main (String[] param) {
         Node v = Node.parseTree ("A(B,C(D,F(K,L,M,N(O)),P))");
-        System.out.println (v);
-        int n = v.numberOfLeaves();
-        System.out.println ("Number of leaves: " + n); // 7
+        System.out.println(v);
+        System.out.println("Number of leaves: " + v.numberOfLeaves()); // 7
+        System.out.println("Max width: " + v.maxWidth()); // 4
+
     }
 }

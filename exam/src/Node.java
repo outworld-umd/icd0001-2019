@@ -1,14 +1,12 @@
 import java.util.*;
 
+public class Node {
 
+    private String name;
+    private Node   firstChild;
+    private Node   nextSibling;
 
-public class Answer {
-
-    private String   name;
-    private Answer   firstChild;
-    private Answer   nextSibling;
-
-    Answer (String n, Answer d, Answer r) {
+    Node (String n, Node d, Node r) {
         setName (n);
         setFirstChild (d);
         setNextSibling (r);
@@ -16,10 +14,10 @@ public class Answer {
 
     public void   setName (String n)        { name = n; }
     public String getName()                 { return name; }
-    public void   setFirstChild (Answer d)  { firstChild = d; }
-    public Answer getFirstChild()           { return firstChild; }
-    public void   setNextSibling (Answer r) { nextSibling = r; }
-    public Answer getNextSibling()          { return nextSibling; }
+    public void   setFirstChild (Node d)    { firstChild = d; }
+    public Node   getFirstChild()           { return firstChild; }
+    public void   setNextSibling (Node r)   { nextSibling = r; }
+    public Node   getNextSibling()          { return nextSibling; }
 
     @Override
     public String toString() {
@@ -32,9 +30,10 @@ public class Answer {
         if (getFirstChild() != null) {
             b.append ("(");
             b.append (getFirstChild().leftParentheticRepresentation());
-            Answer right = getFirstChild().getNextSibling();
+            Node right = getFirstChild().getNextSibling();
             while (right != null) {
-                b.append ("," + right.leftParentheticRepresentation());
+                b.append (",");
+                b.append (right.leftParentheticRepresentation());
                 right = right.getNextSibling();
             }
             b.append (")");
@@ -42,14 +41,14 @@ public class Answer {
         return b.toString();
     }
 
-    public static Answer parseTree (String s) {
+    public static Node parseTree (String s) {
         if (s == null) return null;
         if (s.length() == 0) return null;
-        Answer root = null;
-        Answer curr = null;
-        Answer last = null;
+        Node root = null;
+        Node curr = null;
+        Node last = null;
         int state = 0; // begin
-        Stack<Answer> stk = new Stack<Answer>();
+        Stack<Node> stk = new Stack<Node>();
         StringTokenizer tok = new StringTokenizer (s, "(),", true);
         while (tok.hasMoreTokens()) {
             String w = tok.nextToken().trim();
@@ -61,7 +60,7 @@ public class Answer {
                 state = 3; // from down
                 stk.pop();
             } else {
-                curr = new Answer (w, null, null);
+                curr = new Node (w, null, null);
                 switch (state) {
                     case 0: {
                         root = curr;
@@ -78,7 +77,6 @@ public class Answer {
                         break;
                     }
                     default: {
-                        // do not pop here but after ")"
                     }
                 } // switch
                 stk.push (curr);
@@ -87,15 +85,14 @@ public class Answer {
         return root;
     }
 
-    private int countWidth(Answer a) {
-        if (a.getFirstChild() == null) return 0;
-        Answer child = a.getFirstChild();
-        int count = 0;
-        int maxWidth = 0;
-        while (child != null) {
+    private int countWidth(Node n) {
+        if (n.getFirstChild() == null) return 0;
+        Node child = n.getFirstChild();
+        int maxWidth = countWidth(child);
+        int count = 1;
+        while ((child = child.getNextSibling()) != null) {
             count++;
             maxWidth = Math.max(countWidth(child), maxWidth);
-            child = child.getNextSibling();
         }
         return Math.max(maxWidth, count);
     }
@@ -104,20 +101,22 @@ public class Answer {
         return countWidth(this);
     }
 
+    private int countLeaves(Node n) {
+        if (n.getFirstChild() == null) return 1;
+        Node child = n.getFirstChild();
+        int count = countLeaves(child);
+        while ((child = child.getNextSibling()) != null) count += countLeaves(child);
+        return count;
+    }
+
+    public int numberOfLeaves() {
+        return countLeaves(this);
+    }
+
     public static void main (String[] param) {
-        Answer v = Answer.parseTree ("A(B,C(D,F(K,L,M,N(O)),P))");
+        Node v = Node.parseTree ("A(B,C(D,F(K,L,M,N(O)),P))");
         System.out.println (v);
-        int n = v.maxWidth();
-        System.out.println ("Maximum number of children: " + n); // 4
-
-        v = Answer.parseTree("A(B(C))");
-        System.out.println (v);
-        n = v.maxWidth();
-        System.out.println ("Maximum number of children: " + n); // 1
-
-        v = Answer.parseTree("A");
-        System.out.println (v);
-        n = v.maxWidth();
-        System.out.println ("Maximum number of children: " + n); // 0
+        int n = v.numberOfLeaves();
+        System.out.println ("Number of leaves: " + n); // 7
     }
 }

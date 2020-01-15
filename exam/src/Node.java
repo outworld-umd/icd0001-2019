@@ -25,7 +25,7 @@ public class Node {
     }
 
     public String leftParentheticRepresentation() {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         b.append (getName());
         if (getFirstChild() != null) {
             b.append ("(");
@@ -48,7 +48,7 @@ public class Node {
         Node curr = null;
         Node last = null;
         int state = 0; // begin
-        Stack<Node> stk = new Stack<Node>();
+        Stack<Node> stk = new Stack<>();
         StringTokenizer tok = new StringTokenizer (s, "(),", true);
         while (tok.hasMoreTokens()) {
             String w = tok.nextToken().trim();
